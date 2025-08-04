@@ -1,0 +1,130 @@
+# Initialisasi Project Node.js
+npm init
+
+# Install Nodemon
+npm install --save-dev nodemon
+
+# Install Typescript
+npm install --save-dev typescript ts-node @types/node @types/express
+
+# Install Express
+npm install express
+
+# Install Cors
+npm install cors
+npm install --save-dev @types/cors
+
+# Install DotEnv (Environment Variables)
+npm install dotenv
+
+# Install Prettier
+npm install --save-dev prettier
+
+# Initialisasi Typescript
+npx tsc --init
+
+### Konfigurasi file: .prettierrc
+──────────────────────────────────────────────────────────────────
+│{
+│  "semi": true,
+│  "singleQuote": true,
+│  "tabWidth": 2,
+│  "useTabs": false,
+│  "trailingComma": "es5",
+│  "printWidth": 150,
+│  "bracketSpacing": true
+│}
+
+### Konfigurasi file: .vscode/settings.json
+──────────────────────────────────────────────────────────────────
+│{
+│  "editor.formatOnSave": true,
+│  "[typescript]": {
+│    "editor.defaultFormatter": "esbenp.prettier-vscode"
+│  }
+│}
+
+### Konfigurasi file: package.json
+──────────────────────────────────────────────────────────────────
+│"scripts": {
+│  "build": "tsc",
+│  "dev": "nodemon",
+│  "start": "node dist/index.js",
+│  "format": "prettier --write ."
+│}
+
+### Konfigurasi file: tsconfig.json
+──────────────────────────────────────────────────────────────────
+│{
+│  "compilerOptions": {
+│    "target": "ES2020",
+│    "module": "ESNext",
+│    "moduleResolution": "node",
+│    "outDir": "dist",
+│    "rootDir": "src",
+│    "esModuleInterop": true,
+│    "forceConsistentCasingInFileNames": true,
+│    "resolveJsonModule": true,
+│    "skipLibCheck": true,
+│    "strict": true
+│  },
+│  "include": ["src"]
+│}
+
+### Konfigurasi file: nodemon.json
+──────────────────────────────────────────────────────────────────
+│{
+│  "ext": "ts",
+│  "ignore": ["dist"],
+│  "watch": ["src"],
+│  "exec": "ts-node src/index.ts"
+│}
+
+### Konfigurasi file: .prettierignore
+──────────────────────────────────────────────────────────────────
+│ node_modules
+│ dist
+
+### Konfigurasi file: .gitignore
+──────────────────────────────────────────────────────────────────
+│ node_modules/
+│ 
+│ # - Folder hasil build (dari tsconfig "outDir")
+│ dist/
+│ build/
+│ # - TypeScript cache
+│ *.tsbuildinfo
+│ 
+│ # - Output dari debugging / logs
+│ npm-debug.log*
+│ yarn-debug.log*
+│ yarn-error.log*
+│ pnpm-debug.log*
+│ 
+│ # - Environment variable
+│ .env
+│ .env.local
+│ .env.*.local
+│ 
+│ # - Editor / OS files
+│ .DS_Store
+│ Thumbs.db
+│ 
+│ # - VSCode settings (opsional, kalau team pakai setting berbeda)
+│ .vscode/
+│ 
+│ # - Coverage results
+│ coverage/
+│ 
+│ # - Optional: hasil testing / cache
+│ jest-cache/
+│ jest-output/
+│ .cache/
+│ nyc_output/
+│ 
+│ # - Lint / format
+│ .prettierignore
+│ .eslintcache
+│ 
+│ # - Misc
+│ *.log

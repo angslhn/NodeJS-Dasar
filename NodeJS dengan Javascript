@@ -1,0 +1,60 @@
+# Initialisasi Project Node.js
+npm init
+
+# Install Nodemon
+npm install --save-dev nodemon
+
+# Install Express
+npm install express
+
+# Install Cors
+npm install cors
+
+# Install DotEnv (Environment Variables)
+npm install dotenv
+
+# Install Prettier
+npm install --save-dev prettier
+
+### Konfigurasi file: .prettierrc
+──────────────────────────────────────────────────────────────────
+│{
+│  "semi": true,
+│  "singleQuote": true,
+│  "tabWidth": 2,
+│  "useTabs": false,
+│  "trailingComma": "es5",
+│  "printWidth": 150,
+│  "bracketSpacing": true
+│}
+
+### Konfigurasi file: .vscode/settings.json
+──────────────────────────────────────────────────────────────────
+│{
+│  "editor.formatOnSave": true,
+│  "[javascript]": {
+│    "editor.defaultFormatter": "esbenp.prettier-vscode"
+│  }
+│}
+
+### Konfigurasi file: package.json
+──────────────────────────────────────────────────────────────────
+│"scripts": {
+│  "dev": "nodemon",
+│  "start": "node src/index.js",
+│  "format": "prettier --write ."
+│}
+
+# Konfigurasi file: nodemon.json
+──────────────────────────────────────────────────────────────────
+│{
+│  "ext": "js",
+│  "ignore": ["node_modules"],
+│  "watch": ["src"],
+│  "exec": "node src/index.js"
+│}
+
+# Konfigurasi file: .gitignore
+──────────────────────────────────────────────────────────────────
+│node_modules/
+│.env
