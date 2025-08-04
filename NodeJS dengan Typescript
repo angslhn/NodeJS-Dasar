@@ -1,14 +1,12 @@
 # Initialisasi Project Node.js
 npm init
 
-# Install Nodemon
-npm install --save-dev nodemon
-
 # Install Typescript
-npm install --save-dev typescript ts-node @types/node @types/express
+npm install --save-dev typescript ts-node @types/node
 
 # Install Express
 npm install express
+npm install @types/express
 
 # Install Cors
 npm install cors
@@ -20,6 +18,13 @@ npm install dotenv
 # Install Prettier
 npm install --save-dev prettier
 
+# Install Alias Import
+npm install module-alias
+npm install --save-dev @types/module-alias
+
+# Install Jest
+npm install --save-dev jest ts-jest @types/jest
+
 # Initialisasi Typescript
 npx tsc --init
 
@@ -28,10 +33,10 @@ npx tsc --init
 │{
 │  "semi": true,
 │  "singleQuote": true,
-│  "tabWidth": 2,
+│  "tabWidth": 3,
 │  "useTabs": false,
 │  "trailingComma": "es5",
-│  "printWidth": 150,
+│  "printWidth": 300,
 │  "bracketSpacing": true
 │}
 
@@ -46,44 +51,74 @@ npx tsc --init
 
 ### Konfigurasi file: package.json
 ──────────────────────────────────────────────────────────────────
-│"scripts": {
-│  "build": "tsc",
-│  "dev": "nodemon",
-│  "start": "node dist/index.js",
-│  "format": "prettier --write ."
+│{
+│   "type": "commonjs",
+│   "main": "./src/index.ts",
+│   "scripts": {
+│       "test": "jest",
+│       "build": "tsc",
+│       "dev": "tsc-watch --onSuccess \"node ./dist/src/index.js\"",
+│       "start": "node dist/src/index.js",
+│       "format": "prettier --write ."
+│ },
+│ "_moduleAliases": {
+│   "@": "./dist/src"
+│ },
 │}
 
 ### Konfigurasi file: tsconfig.json
 ──────────────────────────────────────────────────────────────────
 │{
-│  "compilerOptions": {
-│    "target": "ES2020",
-│    "module": "ESNext",
-│    "moduleResolution": "node",
-│    "outDir": "dist",
-│    "rootDir": "src",
-│    "esModuleInterop": true,
-│    "forceConsistentCasingInFileNames": true,
-│    "resolveJsonModule": true,
-│    "skipLibCheck": true,
-│    "strict": true
-│  },
-│  "include": ["src"]
+│   /* Language and Environment */
+│    "target": "es2020"
+│
+│   /* Modules */
+│   "module": "commonjs"
+│   "moduleResolution": "node",
+│   "baseUrl": ".",
+│   "paths": {
+│     "@/*": ["src/*"]
+│   },
+│   "resolveJsonModule": true 
+│
+│   /* Emit */
+│   "outDir": "./dist"
+│
+│   /* Interop Constraints */
+│   "esModuleInterop": true
+│   "forceConsistentCasingInFileNames": true
+│
+│   /* Type Checking */
+│   "strict": true
+│   "noUnusedLocals": true
+│   "noUnusedParameters": true
+│   "skipLibCheck": true
 │}
 
-### Konfigurasi file: nodemon.json
+### Konfigurasi file: jest.config.ts
 ──────────────────────────────────────────────────────────────────
-│{
-│  "ext": "ts",
-│  "ignore": ["dist"],
-│  "watch": ["src"],
-│  "exec": "ts-node src/index.ts"
-│}
+│import type { Config } from 'jest';
+│
+│const config: Config = {
+│   clearMocks: true,
+│   collectCoverage: true,
+│   coverageDirectory: 'coverage',
+│   moduleFileExtensions: ['ts', 'json', 'node'],
+│   moduleNameMapper: {
+│     '^@/(.*)$': '<rootDir>/src/$1',
+│   },
+│   preset: 'ts-jest',
+│   transform: {
+│     '^.+\\.ts$': 'ts-jest',
+│   }
+│};
+│
+│export default config;
 
 ### Konfigurasi file: .prettierignore
 ──────────────────────────────────────────────────────────────────
-│ node_modules
-│ dist
+│ node_modules/
+│ dist/
 
 ### Konfigurasi file: .gitignore
 ──────────────────────────────────────────────────────────────────
@@ -123,7 +158,6 @@ npx tsc --init
 │ nyc_output/
 │ 
 │ # - Lint / format
-│ .prettierignore
 │ .eslintcache
 │ 
 │ # - Misc
