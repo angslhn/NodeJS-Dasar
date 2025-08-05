@@ -18,8 +18,8 @@ npm install --save-dev @types/cors
 # Install DotEnv (Environment Variables)
 npm install dotenv
 
-# Install Prettier
-npm install --save-dev prettier
+# Install ESLint dan Prettier
+npm install --save-dev eslint prettier jiti eslint-config-prettier eslint-plugin-prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser
 
 # Install Alias Import
 npm install module-alias
@@ -39,7 +39,7 @@ npm install --save-dev nodemon
 │{
 │  "watch": ["src"],
 │  "ext": "js, ts, json",
-│  "ignore": ["node_modules", "*.test.ts"],
+│  "ignore": ["node_modules", "dist", "build", ".git", "*.log", "*.test.ts", "*.spec.ts", "**/__tests__/**", ".env", "coverage", "tmp", ".eslintcache"]
 │  "exec": "tsc && node ./dist/index.js"
 │}
 
@@ -54,6 +54,63 @@ npm install --save-dev nodemon
 │  "printWidth": 300,
 │  "bracketSpacing": true
 │}
+
+### Buat dan konfigurasi file: eslint.config.ts
+──────────────────────────────────────────────────────────────────
+│import js from '@eslint/js';
+│import ts from '@typescript-eslint/eslint-plugin';
+│import tsParser from '@typescript-eslint/parser';
+│import prettier from 'eslint-plugin-prettier';
+│
+│export default [
+│   js.configs.recommended,
+│   {
+│      ignores: ['node_modules/**', 'dist/**'],
+│      languageOptions: {
+│         parser: tsParser,
+│         globals: {
+│            process: 'readonly',
+│            console: 'readonly',
+│         },
+│      },
+│      plugins: {
+│         '@typescript-eslint': ts,
+│         prettier: prettier,
+│      },
+│      rules: {
+│         // Enforce consistent indentation (4 spaces in this case)
+│         indent: ['error', 3],
+│         // Enforce the use of single quotes for strings
+│         quotes: ['error', 'single'],
+│         // Enforce semicolons at the end of statements
+│         semi: ['error', 'always'],
+│         // Enforce consistent line breaks (LF for Unix)
+│         'linebreak-style': ['error', 'unix'],
+│         // Require the use of === and !== (no implicit type conversions)
+│         eqeqeq: ['error', 'always'],
+│         // Always use {} for if-else statement and looping.
+│         curly: ['error', 'all'],
+│         // Enforce a maximum line length (usually 80 or 100 characters)
+│         'max-len': ['error', { code: 300 }],
+│         // If there is a return in an if code, there is no need for else.
+│         'no-else-return': 'error',
+│         // Detecting if a function is empty
+│         'no-empty-function': 'warn', // Deteksi function kosong
+│         // Only allowed to use let or cost
+│         'no-var': 'error',
+│         // If the value is not changed then use const
+│         'prefer-const': 'error',
+│         // Enable Prettier as a lint rule
+│         'prettier/prettier': [
+│            'error',
+│            {
+│               singleQuote: true,
+│               semi: true,
+│            },
+│         ],
+│      },
+│   },
+│];
 
 ### Buat dan konfigurasi file: .vscode/settings.json
 ──────────────────────────────────────────────────────────────────
@@ -79,6 +136,8 @@ npm install --save-dev nodemon
 │    "test": "jest",
 │    "test:watch": "jest --watch",
 │    "test:cov": "jest --coverage",
+│    "lint": "eslint . --ext .ts",
+│    "lint:fix": "eslint . --ext .ts --fix",
 │    "format": "prettier --write ."
 │ },
 │ "_moduleAliases": {
