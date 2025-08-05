@@ -4,6 +4,9 @@ npm init
 # Install Typescript
 npm install --save-dev typescript ts-node @types/node
 
+# Initialisasi Typescript
+npx tsc --init
+
 # Install Express
 npm install express
 npm install @types/express
@@ -25,10 +28,22 @@ npm install --save-dev @types/module-alias
 # Install Jest
 npm install --save-dev jest ts-jest @types/jest
 
-# Initialisasi Typescript
-npx tsc --init
+# Initialisasi Jest
+npm init jest@latest
 
-### Konfigurasi file: .prettierrc
+# Install Nodemon
+npm install --save-dev nodemon
+
+### Buat dan konfigurasi file: nodemon.json
+──────────────────────────────────────────────────────────────────
+│{
+│  "watch": ["src"],
+│  "ext": "js, ts, json",
+│  "ignore": ["node_modules", "*.test.ts"],
+│  "exec": "tsc && node ./dist/index.js"
+│}
+
+### Buat dan konfigurasi file: .prettierrc
 ──────────────────────────────────────────────────────────────────
 │{
 │  "semi": true,
@@ -40,7 +55,7 @@ npx tsc --init
 │  "bracketSpacing": true
 │}
 
-### Konfigurasi file: .vscode/settings.json
+### Buat dan konfigurasi file: .vscode/settings.json
 ──────────────────────────────────────────────────────────────────
 │{
 │  "editor.formatOnSave": true,
@@ -49,31 +64,43 @@ npx tsc --init
 │  }
 │}
 
-### Konfigurasi file: package.json
+### Salin dan timpa sebagian ke konfigurasi file: package.json
 ──────────────────────────────────────────────────────────────────
 │{
-│   "type": "commonjs",
-│   "main": "./src/index.ts",
-│   "scripts": {
-│       "test": "jest",
-│       "build": "tsc",
-│       "dev": "tsc-watch --onSuccess \"node ./dist/src/index.js\"",
-│       "start": "node dist/src/index.js",
-│       "format": "prettier --write ."
+│ .
+│ .
+│ .
+│ "type": "commonjs",
+│ "main": "./src/index.ts",
+│ "scripts": {
+│    "build": "tsc",
+│    "dev": "nodemon",
+│    "start": "node dist/index.js",
+│    "test": "jest",
+│    "test:watch": "jest --watch",
+│    "test:cov": "jest --coverage",
+│    "format": "prettier --write ."
 │ },
 │ "_moduleAliases": {
-│   "@": "./dist/src"
+│   "@": "./src"
 │ },
+  .
+  .
+  .
 │}
 
 ### Konfigurasi file: tsconfig.json
 ──────────────────────────────────────────────────────────────────
 │{
+│ {
+│   /* Projects */
+│    "incremental": true,
+│
 │   /* Language and Environment */
-│    "target": "es2020"
+│    "target": "es2020",
 │
 │   /* Modules */
-│   "module": "commonjs"
+│   "module": "commonjs",
 │   "moduleResolution": "node",
 │   "baseUrl": ".",
 │   "paths": {
@@ -82,7 +109,7 @@ npx tsc --init
 │   "resolveJsonModule": true 
 │
 │   /* Emit */
-│   "outDir": "./dist"
+│   "outDir": "dist"
 │
 │   /* Interop Constraints */
 │   "esModuleInterop": true
@@ -92,7 +119,12 @@ npx tsc --init
 │   "strict": true
 │   "noUnusedLocals": true
 │   "noUnusedParameters": true
+│
+│   /* Completeness */
 │   "skipLibCheck": true
+│ },
+│ "include": ["src/**/*"],
+│ "exclude": ["**/*.test.ts", "**/*.spec.ts", "**/__tests__/**", "jest.config.ts", "node_modules", "dist"]
 │}
 
 ### Konfigurasi file: jest.config.ts
@@ -103,7 +135,8 @@ npx tsc --init
 │   clearMocks: true,
 │   collectCoverage: true,
 │   coverageDirectory: 'coverage',
-│   moduleFileExtensions: ['ts', 'json', 'node'],
+│   coverageProvider: 'v8',
+│   moduleFileExtensions: ['js', 'ts', 'json', 'node'],
 │   moduleNameMapper: {
 │     '^@/(.*)$': '<rootDir>/src/$1',
 │   },
