@@ -49,7 +49,7 @@ npm install --save-dev nodemon
 │  "semi": true,
 │  "singleQuote": true,
 │  "tabWidth": 3,
-│  "useTabs": false,
+│  "useTabs": true,
 │  "trailingComma": "es5",
 │  "printWidth": 300,
 │  "bracketSpacing": true
