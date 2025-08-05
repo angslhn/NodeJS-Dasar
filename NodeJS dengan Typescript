@@ -61,11 +61,11 @@ npm install --save-dev nodemon
 │import ts from '@typescript-eslint/eslint-plugin';
 │import tsParser from '@typescript-eslint/parser';
 │import prettier from 'eslint-plugin-prettier';
+│import { defineConfig, globalIgnores } from 'eslint/config';
 │
-│export default [
+│export default defineConfig([
 │   js.configs.recommended,
 │   {
-│      ignores: ['node_modules/**', 'dist/**'],
 │      languageOptions: {
 │         parser: tsParser,
 │         globals: {
@@ -73,8 +73,9 @@ npm install --save-dev nodemon
 │            console: 'readonly',
 │         },
 │      },
+│      },
 │      plugins: {
-│         '@typescript-eslint': ts,
+│         '@typescript-eslint': ts.rules,
 │         prettier: prettier,
 │      },
 │      rules: {
@@ -110,7 +111,8 @@ npm install --save-dev nodemon
 │         ],
 │      },
 │   },
-│];
+│   globalIgnores(['dist/**', 'node_modules/**']),
+│]);
 
 ### Buat dan konfigurasi file: .vscode/settings.json
 ──────────────────────────────────────────────────────────────────
