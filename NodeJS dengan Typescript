@@ -1,29 +1,17 @@
-# Initialisasi Project Node.js
-npm init
+# 1. Inisialisasi Project
+npm init -y
 
-# Install Typescript
-npm install --save-dev typescript ts-node @types/node
+# 2. Install Dependencies Utama
+npm install express cors dotenv-flow @types/node @types/express @types/cors @types/dotenv-flow
 
-# Initialisasi Typescript
+# 3. Install Development Tools (All-in-One)
+# - tsx: Runner modern
+# - tsc-alias: Penanganan path alias (@/) saat build
+# - typescript-eslint: Helper baru untuk ESLint v9
+npm install --save-dev typescript tsx tsc-alias eslint prettier eslint-config-prettier eslint-plugin-prettier typescript-eslint
+
+# 4. Inisialisasi config TypeScript
 npx tsc --init
-
-# Install Express
-npm install express
-npm install @types/express
-
-# Install Cors
-npm install cors
-npm install --save-dev @types/cors
-
-# Install DotEnv (Environment Variables)
-npm install dotenv
-
-# Install ESLint dan Prettier
-npm install --save-dev eslint prettier jiti eslint-config-prettier eslint-plugin-prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser
-
-# Install Alias Import
-npm install module-alias
-npm install --save-dev @types/module-alias
 
 # Install Jest
 npm install --save-dev jest ts-jest @types/jest
@@ -34,87 +22,88 @@ npm init jest@latest
 # Install Nodemon
 npm install --save-dev nodemon
 
-### Buat dan konfigurasi file: nodemon.json
+### Salin dan timpa sebagian ke konfigurasi file: package.json
 ──────────────────────────────────────────────────────────────────
 │{
-│  "watch": ["src"],
-│  "ext": "js, ts, json",
-│  "ignore": ["node_modules", "dist", "build", ".git", "*.log", "*.test.ts", "*.spec.ts", "**/__tests__/**", ".env", "coverage", "tmp", ".eslintcache"],
-│  "exec": "tsc && node ./dist/index.js"
+│ .
+│ .
+│ .
+| "type": "module",
+|  "main": "./dist/index.js",
+|  "scripts": {
+|    "dev": "nodemon",
+|    "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+|    "start": "node dist/index.js",
+|    "lint": "eslint .",
+|    "lint:fix": "eslint . --fix",
+|    "format": "prettier --write .",
+|    "test": "jest"
+|  },
+|  .
+|  .
+|  .
 │}
+
+### Buat dan konfigurasi file: nodemon.json
+──────────────────────────────────────────────────────────────────
+|{
+|  "watch": ["src"],
+|  "ext": "js,ts,json",
+|  "ignore": ["node_modules", "dist", "coverage", ".git"],
+|  "exec": "tsx ./src/index.ts"
+|}
 
 ### Buat dan konfigurasi file: .prettierrc
 ──────────────────────────────────────────────────────────────────
-│{
-│  "semi": true,
-│  "singleQuote": true,
-│  "tabWidth": 3,
-│  "useTabs": true,
-│  "trailingComma": "es5",
-│  "printWidth": 300,
-│  "bracketSpacing": true
-│}
+|{
+|  "semi": true,
+|  "singleQuote": true,
+|  "tabWidth": 2,
+|  "useTabs": false,
+|  "trailingComma": "all",
+|  "printWidth": 100,
+|  "bracketSpacing": true,
+|  "endOfLine": "auto"
+|}
 
-### Buat dan konfigurasi file: eslint.config.ts
+### Buat dan konfigurasi file: eslint.config.mjs
 ──────────────────────────────────────────────────────────────────
-│import js from '@eslint/js';
-│import ts from '@typescript-eslint/eslint-plugin';
-│import tsParser from '@typescript-eslint/parser';
-│import prettier from 'eslint-plugin-prettier';
-│import { defineConfig, globalIgnores } from 'eslint/config';
-│
-│export default defineConfig([
-│   js.configs.recommended,
-│   {
-│      languageOptions: {
-│         parser: tsParser,
-│         globals: {
-│            process: 'readonly',
-│            console: 'readonly',
-│         },
-│      },
-│      },
-│      plugins: {
-│         '@typescript-eslint': ts.rules,
-│         prettier: prettier,
-│      },
-│      rules: {
-│         // Enforce consistent indentation (4 spaces in this case)
-│         indent: ['error', 3],
-│         // Enforce the use of single quotes for strings
-│         quotes: ['error', 'single'],
-│         // Enforce semicolons at the end of statements
-│         semi: ['error', 'always'],
-│         // Enforce consistent line breaks (LF for Unix)
-│         'linebreak-style': ['error', 'unix'],
-│         // Require the use of === and !== (no implicit type conversions)
-│         eqeqeq: ['error', 'always'],
-│         // Always use {} for if-else statement and looping.
-│         curly: ['error', 'all'],
-│         // Enforce a maximum line length (usually 80 or 100 characters)
-│         'max-len': ['error', { code: 300 }],
-│         // If there is a return in an if code, there is no need for else.
-│         'no-else-return': 'error',
-│         // Detecting if a function is empty
-│         'no-empty-function': 'warn', // Deteksi function kosong
-│         // Only allowed to use let or cost
-│         'no-var': 'error',
-│         // If the value is not changed then use const
-│         'prefer-const': 'error',
-│         // Enable Prettier as a lint rule
-│         'prettier/prettier': [
-│            'error',
-│            {
-│               singleQuote: true,
-│               semi: true,
-│            },
-│         ],
-│      },
-│   },
-│   globalIgnores(['dist/**', 'node_modules/**']),
-│]);
+|import js from "@eslint/js";
+|import tseslint from "typescript-eslint";
+|import { defineConfig } from "eslint/config";
+|import prettierPlugin from "eslint-plugin-prettier";
+|import eslintConfigPrettier from "eslint-config-prettier";
+|
+|export default defineConfig(
+|  js.configs.recommended,
+|  ...tseslint.configs.recommended,
+|  {
+|    ignores: ["dist/**", "node_modules/**", "coverage/**"],
+|  },
+|  {
+|    languageOptions: {
+|      ecmaVersion: "latest",
+|      sourceType: "module",
+|    },
+|    plugins: {
+|      prettier: prettierPlugin,
+|    },
+|    rules: {
+|      "prettier/prettier": "error",
+|      eqeqeq: ["error", "always"],
+|      "no-var": "error",
+|      "prefer-const": "error",
+|      "@typescript-eslint/no-explicit-any": "warn",
+|      "@typescript-eslint/no-unused-vars": [
+|        "warn",
+|        { argsIgnorePattern: "^_" },
+|      ],
+|    },
+|  },
+|  eslintConfigPrettier,
+|);
 
-### Buat dan konfigurasi file: .vscode/settings.json
+### Buat konfigurasi file: .vscode/settings.json
 ──────────────────────────────────────────────────────────────────
 │{
 │  "editor.formatOnSave": true,
@@ -123,98 +112,86 @@ npm install --save-dev nodemon
 │  }
 │}
 
-### Salin dan timpa sebagian ke konfigurasi file: package.json
+### Salin dan timpa konfigurasi file: tsconfig.json
 ──────────────────────────────────────────────────────────────────
-│{
-│ .
-│ .
-│ .
-│ "type": "commonjs",
-│ "main": "./src/index.ts",
-│ "scripts": {
-│    "build": "tsc -p tsconfig.build.json",
-│    "dev": "nodemon",
-│    "start": "node dist/index.js",
-│    "test": "jest",
-│    "test:watch": "jest --watch",
-│    "test:cov": "jest --coverage",
-│    "lint": "eslint . --ext .ts",
-│    "lint:fix": "eslint . --ext .ts --fix",
-│    "format": "prettier --write ."
-│ },
-│ "_moduleAliases": {
-│   "@": "./src"
-│ },
-  .
-  .
-  .
-│}
-
-### Konfigurasi file: tsconfig.json
-──────────────────────────────────────────────────────────────────
-│{
-│ {
-│   /* Projects */
-│    "incremental": true,
-│
-│   /* Language and Environment */
-│    "target": "es2020",
-│
-│   /* Modules */
-│   "module": "commonjs",
-│   "moduleResolution": "node",
-│   "baseUrl": ".",
-│   "paths": {
-│     "@/*": ["src/*"]
-│   },
-│   "resolveJsonModule": true 
-│
-│   /* Emit */
-│   "outDir": "dist"
-│
-│   /* Interop Constraints */
-│   "esModuleInterop": true
-│   "forceConsistentCasingInFileNames": true
-│
-│   /* Type Checking */
-│   "strict": true
-│   "noUnusedLocals": true
-│   "noUnusedParameters": true
-│
-│   /* Completeness */
-│   "skipLibCheck": true
-│ },
-│ "include": ["src/**/*"]
-│}
+|{
+|  "compilerOptions": {
+|    /* --- Projects & Build --- */
+|    "incremental": true,
+|    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+|
+|    /* --- Language & Environment --- */
+|    "target": "ES2022",
+|    "lib": ["ES2022"],
+|
+|    /* --- Modules (Native ESM) --- */
+|    "module": "NodeNext",
+|    "moduleResolution": "NodeNext",
+|    "baseUrl": ".",
+|    "paths": {
+|      "@/*": ["src/*"]
+|    },
+|    "resolveJsonModule": true,
+|
+|    /* --- Emit --- */
+|    "outDir": "dist",
+|    "sourceMap": true,
+|    "removeComments": true,
+|
+|    /* --- Strict Type Checking --- */
+|    "strict": true,
+|    "noUnusedLocals": true,
+|    "noUnusedParameters": true,
+|    "noImplicitReturns": true,
+|    "noFallthroughCasesInSwitch": true,
+|    "noUncheckedIndexedAccess": true,
+|
+|    /* --- Modern Standards --- */
+|    "verbatimModuleSyntax": true,
+|    "esModuleInterop": true,
+|    "forceConsistentCasingInFileNames": true,
+|    "skipLibCheck": true
+|  },
+|  "include": ["src/**/*"],
+|  "exclude": ["node_modules", "dist"]
+|}
 
 ### Buat dan konfigurasi file: tsconfig.build.json
 ──────────────────────────────────────────────────────────────────
-│{
-│  "extends": "./tsconfig.json",
-│  "exclude": ["**/*.test.ts", "**/*.spec.ts", "**/__tests__/**", "jest.config.ts", "node_modules", "dist"]
-│}
+|{
+|  "extends": "./tsconfig.json",
+|  "exclude": [
+|    "**/*.test.ts", 
+|    "**/*.spec.ts", 
+|    "**/__tests__/**", 
+|    "jest.config.ts", 
+|    "node_modules", 
+|    "dist"
+|  ]
+|}
 
-### Konfigurasi file: jest.config.ts
+### Salin dan Konfigurasi file: jest.config.ts
 ──────────────────────────────────────────────────────────────────
-│import type { Config } from 'jest';
-│
-│const config: Config = {
-│   clearMocks: true,
-│   collectCoverage: true,
-│   coverageDirectory: 'coverage',
-│   coverageProvider: 'v8',
-│   moduleFileExtensions: ['js', 'ts', 'json', 'node'],
-│   moduleNameMapper: {
-│     '^@/(.*)$': '<rootDir>/src/$1',
-│   },
-│   preset: 'ts-jest',
-│   testEnvironment: 'jest-environment-node',
-│   transform: {
-│     '^.+\\.ts$': 'ts-jest',
-│   }
-│};
-│
-│export default config;
+|import type { JestConfigWithTsJest } from 'ts-jest';
+|
+|const config: JestConfigWithTsJest = {
+|  preset: 'ts-jest',
+|  testEnvironment: 'node',
+|  moduleNameMapper: {
+|    '^@/(.*)$': '<rootDir>/src/$1',
+|  },
+|  extensionsToTreatAsEsm: ['.ts'],
+|  transform: {
+|    '^.+\\.tsx?$': [
+|      'ts-jest',
+|      {
+|        useESM: true,
+|      },
+|    ],
+|  },
+|};
+|
+|export default config;
 
 ### Konfigurasi file: .prettierignore
 ──────────────────────────────────────────────────────────────────
