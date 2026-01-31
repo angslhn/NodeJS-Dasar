@@ -28,7 +28,7 @@ npm install --save-dev nodemon
 │ .
 │ .
 │ .
-| "type": "module",
+|  "type": "module",
 |  "main": "./dist/index.js",
 |  "scripts": {
 |    "dev": "nodemon",
@@ -36,8 +36,7 @@ npm install --save-dev nodemon
 |    "start": "node dist/index.js",
 |    "lint": "eslint .",
 |    "lint:fix": "eslint . --fix",
-|    "format": "prettier --write .",
-|    "test": "jest"
+|    "format": "prettier --write ."
 |  },
 |  .
 |  .
@@ -73,31 +72,27 @@ npm install --save-dev nodemon
 |import { defineConfig } from "eslint/config";
 |import prettierPlugin from "eslint-plugin-prettier";
 |import eslintConfigPrettier from "eslint-config-prettier";
-|
 |export default defineConfig(
-|  js.configs.recommended,
-|  ...tseslint.configs.recommended,
+| js.configs.recommended,
+|...tseslint.configs.recommended,
 |  {
-|    ignores: ["dist/**", "node_modules/**", "coverage/**"],
+|    ignores: ['dist/**', 'node_modules/**', 'coverage/**'],
 |  },
 |  {
 |    languageOptions: {
-|      ecmaVersion: "latest",
-|      sourceType: "module",
+|      ecmaVersion: 'latest',
+|      sourceType: 'module',
 |    },
 |    plugins: {
 |      prettier: prettierPlugin,
 |    },
 |    rules: {
-|      "prettier/prettier": "error",
-|      eqeqeq: ["error", "always"],
-|      "no-var": "error",
-|      "prefer-const": "error",
-|      "@typescript-eslint/no-explicit-any": "warn",
-|      "@typescript-eslint/no-unused-vars": [
-|        "warn",
-|        { argsIgnorePattern: "^_" },
-|      ],
+|      'prettier/prettier': 'error',
+|       eqeqeq: ['error', 'always'],
+|      'no-var': 'error',
+|      'prefer-const': 'error',
+|      '@typescript-eslint/no-explicit-any': 'warn',
+|      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
 |    },
 |  },
 |  eslintConfigPrettier,
@@ -118,7 +113,7 @@ npm install --save-dev nodemon
 |  "compilerOptions": {
 |    /* --- Projects & Build --- */
 |    "incremental": true,
-|    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+|    "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo",
 |
 |    /* --- Language & Environment --- */
 |    "target": "ES2022",
@@ -149,7 +144,7 @@ npm install --save-dev nodemon
 |    /* --- Modern Standards --- */
 |    "verbatimModuleSyntax": true,
 |    "esModuleInterop": true,
-|    "forceConsistentCasingInFileNames": true,
+|     "forceConsistentCasingInFileNames": true,
 |    "skipLibCheck": true
 |  },
 |  "include": ["src/**/*"],
@@ -160,12 +155,17 @@ npm install --save-dev nodemon
 ──────────────────────────────────────────────────────────────────
 |{
 |  "extends": "./tsconfig.json",
+|  "compilerOptions": {
+|    "sourceMap": false,
+|    "declaration": false,
+|    "removeComments": true
+|  },
 |  "exclude": [
-|    "**/*.test.ts", 
-|    "**/*.spec.ts", 
-|    "**/__tests__/**", 
-|    "jest.config.ts", 
-|    "node_modules", 
+|    "**/*.test.ts",
+|    "**/*.spec.ts",
+|    "**/__tests__/**",
+|    "jest.config.ts",
+|    "node_modules",
 |    "dist"
 |  ]
 |}
@@ -240,3 +240,14 @@ npm install --save-dev nodemon
 │ 
 │ # - Misc
 │ *.log
+
+### Konfigurasi file: vercel.json
+|{
+|  "version": 2,
+|  "rewrites": [
+|    {
+|      "source": "/(.*)",
+|      "destination": "/dist/index.js"
+|    }
+|  ]
+|}
